@@ -92,6 +92,20 @@ cd notification-service
 npm run start:dev
 ```
 
+## Postman Collection
+
+For testing the APIs, a Postman collection is provided:
+
+1. In Postman, click on the "Import" button in the top left corner
+2. Drag and drop the `Restaurant System API.postman_collection.json` file from the project root directory
+3. Alternatively, click on "Upload Files" and select the file
+
+The collection includes all necessary API endpoints for:
+- Creating orders
+- Retrieving order details
+- Checking order status
+- Accessing the food menu
+
 ## Environment Configuration
 
 Each service requires its own `.env` file with the following settings:

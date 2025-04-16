@@ -11,6 +11,23 @@ services:
       - RABBITMQ_DEFAULT_PASS=guest
     networks:
       - app-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  rabbitmq-setup:
+    build: 
+      context: .
+      dockerfile: rabbitmq-setup.Dockerfile
+    environment:
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - app-network
 
   order-service:
     build: ./order-service
@@ -19,13 +36,15 @@ services:
     environment:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
+      - RABBITMQ_URL=amqp://rabbitmq:5672
       - MYSQL_HOST=host.docker.internal
       - MYSQL_PORT=3309
       - MYSQL_USER=root
       - MYSQL_PASSWORD=obeman123
       - MYSQL_DATABASE=restoran
     depends_on:
-      - rabbitmq
+      rabbitmq-setup:
+        condition: service_completed_successfully
     networks:
       - app-network
 
@@ -36,13 +55,15 @@ services:
     environment:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
+      - RABBITMQ_URL=amqp://rabbitmq:5672
       - MYSQL_HOST=host.docker.internal
       - MYSQL_PORT=3309
       - MYSQL_USER=root
       - MYSQL_PASSWORD=obeman123
       - MYSQL_DATABASE=restoran
     depends_on:
-      - rabbitmq
+      rabbitmq-setup:
+        condition: service_completed_successfully
     networks:
       - app-network
 
@@ -53,10 +74,12 @@ services:
     environment:
       - RABBITMQ_HOST=rabbitmq
       - RABBITMQ_PORT=5672
+      - RABBITMQ_URL=amqp://rabbitmq:5672
       - EMAIL_USER=naufalmuhammadroshandi@gmail.com
       - EMAIL_PASSWORD=tuqujhrlclbfuvps
     depends_on:
-      - rabbitmq
+      rabbitmq-setup:
+        condition: service_completed_successfully
     networks:
       - app-network
 

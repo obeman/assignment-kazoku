@@ -6,6 +6,7 @@ import { Inject } from '@nestjs/common';
 import { OrderStatus } from './entities/order.entity';
 import { lastValueFrom } from 'rxjs';
 import * as amqp from 'amqplib';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('orders')
 export class OrderController implements OnModuleInit {
@@ -16,6 +17,7 @@ export class OrderController implements OnModuleInit {
   constructor(
     private readonly orderService: OrderService,
     @Inject('MICROSERVICE_CLIENT') private readonly client: ClientProxy,
+    private readonly configService: ConfigService,
   ) {
     this.logger.log('Order controller initialized with RabbitMQ client');
     
@@ -29,8 +31,12 @@ export class OrderController implements OnModuleInit {
 
   async onModuleInit() {
     try {
+      // Get RabbitMQ URL from environment variables
+      const rabbitmqUrl = this.configService.get('RABBITMQ_URL') || 'amqp://localhost:5672';
+      this.logger.log(`Connecting to RabbitMQ at ${rabbitmqUrl}`);
+      
       // Direct connection to RabbitMQ
-      this.connection = await amqp.connect('amqp://localhost:5672');
+      this.connection = await amqp.connect(rabbitmqUrl);
       this.channel = await this.connection.createChannel();
       
       // Ensure exchange exists

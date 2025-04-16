@@ -6,8 +6,11 @@ async function setupRabbitMQ() {
   let connection;
   
   try {
-    // Connect to RabbitMQ
-    connection = await amqp.connect('amqp://localhost:5672');
+    // Connect to RabbitMQ using environment variable or fallback to localhost
+    const rabbitmqUrl = process.env.RABBITMQ_URL || 'amqp://localhost:5672';
+    console.log(`Connecting to RabbitMQ at ${rabbitmqUrl}`);
+    
+    connection = await amqp.connect(rabbitmqUrl);
     console.log('Connected to RabbitMQ');
     
     // Create a channel

@@ -1,0 +1,237 @@
+{
+	"info": {
+		"_postman_id": "2b646699-c0f9-4c9a-bc75-53f9bf7b795d",
+		"name": "Restaurant System API",
+		"description": "API collection for the Restaurant System microservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29916509"
+	},
+	"item": [
+		{
+			"name": "Menu",
+			"item": [
+				{
+					"name": "Get Menu",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/orders/menu",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"orders",
+								"menu"
+							]
+						},
+						"description": "Retrieve the list of available menu items"
+					},
+					"response": [
+						{
+							"name": "Get Menu",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3000/orders/menu",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"orders",
+										"menu"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "377"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"179-ZqO9R5lIpO2RBzirXjl7sNThLbw\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 15 Apr 2025 08:52:22 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"name\": \"Pizza Margherita\",\n        \"price\": \"10.99\"\n    },\n    {\n        \"id\": 2,\n        \"name\": \"Spaghetti Carbonara\",\n        \"price\": \"12.99\"\n    },\n    {\n        \"id\": 3,\n        \"name\": \"Caesar Salad\",\n        \"price\": \"8.99\"\n    },\n    {\n        \"id\": 4,\n        \"name\": \"Tiramisu\",\n        \"price\": \"6.99\"\n    },\n    {\n        \"id\": 5,\n        \"name\": \"Sushi Roll\",\n        \"price\": \"12.99\"\n    },\n    {\n        \"id\": 6,\n        \"name\": \"Ramen Bowl\",\n        \"price\": \"10.99\"\n    },\n    {\n        \"id\": 7,\n        \"name\": \"Tempura Platter\",\n        \"price\": \"15.99\"\n    },\n    {\n        \"id\": 8,\n        \"name\": \"Miso Soup\",\n        \"price\": \"4.99\"\n    }\n]"
+						}
+					]
+				}
+			],
+			"description": "Menu related endpoints"
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Place Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n       \"customerName\": \"Testo\",\n       \"customerEmail\": \"nmuhammadroshandi@gmail.com\",\n       \"items\": [\n         {\n           \"foodMenuId\": 1,\n           \"quantity\": 3\n         }\n       ]\n     }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"orders"
+							]
+						},
+						"description": "Place a new order"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"items\": [\n    {\n      \"menuItemId\": \"507f1f77bcf86cd799439011\",\n      \"quantity\": 2\n    }\n  ],\n  \"customerEmail\": \"customer@example.com\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3001/orders",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"orders"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get Order Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/orders/:orderId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"orders",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "416364d3-0940-467a-a0c0-0c5da05a655c"
+								}
+							]
+						},
+						"description": "Get the status of an order"
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:3001/orders/507f1f77bcf86cd799439012",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3001",
+									"path": [
+										"orders",
+										"507f1f77bcf86cd799439012"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			],
+			"description": "Order related endpoints"
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3001",
+			"type": "string"
+		}
+	]
+}

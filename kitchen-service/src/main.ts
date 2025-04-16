@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { Channel } from 'amqplib';
+import { Channel, Replies } from 'amqplib';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -46,7 +46,7 @@ async function bootstrap() {
         return new Promise((resolve) => {
           // Don't try to create the exchange, just bind to it
           channel.assertQueue('kitchen_queue', { durable: false, autoDelete: false })
-            .then(q => {
+            .then((q: Replies.AssertQueue) => {
               console.log(`Kitchen service: Queue ${q.queue} asserted`);
               channel.bindQueue(q.queue, 'order_exchange', '');
               console.log(`Kitchen service: Queue ${q.queue} bound to order_exchange`);
