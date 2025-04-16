@@ -42,6 +42,22 @@ This is a microservices-based restaurant management system consisting of three s
 - RabbitMQ
 - MySQL
 
+## Database Setup
+
+1. Create the MySQL database manually:
+```sql
+CREATE DATABASE restoran;
+```
+
+2. Seed the database with initial schema and data:
+```bash
+cd kitchen-service
+npm install mysql2 dotenv
+node run-seed.js
+```
+
+This will create the necessary tables (food_menu, orders, order_foods) and populate the food_menu table with sample data.
+
 ## Setup
 
 1. Install dependencies for each service:
@@ -121,6 +137,17 @@ EMAIL_PASSWORD=your_email_password
 - `GET /orders/:id` - Get order details
 - `GET /orders/:id/status` - Get order status
 
+## Troubleshooting
+
+If you encounter issues with the database schema or enum values:
+
+1. Delete the tables from the database
+2. Run the seed script again:
+```bash
+cd kitchen-service
+node run-seed.js
+```
+
 ## Contributors
 
-- [Your Name](https://github.com/your-github-username) 
+- [Naufal Muhammad Roshandi](https://github.com/obeman) 

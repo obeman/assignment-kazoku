@@ -1,25 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { OrderStatus } from '../types/order.types';
 
-export enum OrderStatus {
-  PENDING = 'PENDING',
-  PROCESSED = 'PROCESSED',
-}
-
-@Entity()
+@Entity('orders')
 export class Order {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryColumn()
+  id: string;
 
-  @Column()
-  customerEmail!: string;
+  @Column({ name: 'customer_email' })
+  customerEmail: string;
 
   @Column({
     type: 'enum',
     enum: OrderStatus,
-    default: OrderStatus.PENDING,
+    default: OrderStatus.PENDING
   })
-  status: OrderStatus = OrderStatus.PENDING;
+  status: OrderStatus;
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  totalPrice!: number;
+  @Column('decimal', { precision: 10, scale: 2, name: 'total_price' })
+  totalPrice: number;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 } 

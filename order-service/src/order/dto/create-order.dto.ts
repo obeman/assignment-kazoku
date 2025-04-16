@@ -1,9 +1,10 @@
-import { IsEmail, IsNotEmpty, IsArray, ValidateNested, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsArray, ValidateNested, IsString, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class OrderItemDto {
+  @IsNumber()
   @IsNotEmpty()
-  foodMenuId: string;
+  foodMenuId: number;
 
   @IsNotEmpty()
   quantity: number;

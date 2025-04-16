@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Order } from './order.entity';
 import { FoodMenu } from './food-menu.entity';
 
@@ -13,17 +13,17 @@ export class OrderFood {
   @Column({ name: 'food_menu_id' })
   foodMenuId: number;
 
-  @ManyToOne(() => Order, order => order.orderFoods)
+  @Column()
+  quantity: number;
+
+  @ManyToOne(() => Order)
   @JoinColumn({ name: 'order_id' })
   order: Order;
 
-  @ManyToOne(() => FoodMenu, foodMenu => foodMenu.orderFoods)
+  @ManyToOne(() => FoodMenu)
   @JoinColumn({ name: 'food_menu_id' })
   foodMenu: FoodMenu;
 
-  @Column()
-  quantity: number;
-  
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

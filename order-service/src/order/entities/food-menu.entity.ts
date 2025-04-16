@@ -3,8 +3,8 @@ import { OrderFood } from './order-food.entity';
 
 @Entity('food_menu')
 export class FoodMenu {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   name: string;
@@ -12,7 +12,7 @@ export class FoodMenu {
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
-  @Column({ nullable: true, name: 'description' })
+  @Column({ nullable: true })
   description: string;
 
   @OneToMany(() => OrderFood, orderFood => orderFood.foodMenu)

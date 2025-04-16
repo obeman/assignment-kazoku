@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
@@ -8,6 +8,7 @@ import { OrderFood } from './entities/order-food.entity';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Channel } from 'amqplib';
+import { ModuleRef } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -42,17 +43,25 @@ import { Channel } from 'amqplib';
                 heartbeatIntervalInSeconds: 30,
                 reconnectTimeInSeconds: 1,
               },
-              assertExchange: true,
+              assertExchange: false,
               setup: (channel: Channel) => {
-                console.log('Setting up RabbitMQ channel in order service...');
+                console.log('Order service: Setting up RabbitMQ channel...');
                 
-                channel.assertExchange('order_exchange', 'fanout', { 
-                  durable: false,
-                  autoDelete: false 
-                });
-                console.log('Order service: Exchange order_exchange asserted');
-                
-                return channel;
+                return channel.checkExchange('order_exchange')
+                  .then(() => {
+                    console.log('Order service: Exchange "order_exchange" exists');
+                    return channel;
+                  })
+                  .catch((err) => {
+                    console.error('Order service: Exchange check failed, attempting to create:', err.message);
+                    return channel.assertExchange('order_exchange', 'fanout', {
+                      durable: false,
+                      autoDelete: false,
+                    }).then(() => {
+                      console.log('Order service: Exchange "order_exchange" created');
+                      return channel;
+                    });
+                  });
               },
             },
           };
@@ -64,4 +73,10 @@ import { Channel } from 'amqplib';
   controllers: [OrderController],
   providers: [OrderService],
 })
-export class OrderModule {} 
+export class OrderModule implements OnModuleInit {
+  constructor(private moduleRef: ModuleRef) {}
+
+  async onModuleInit() {
+    console.log('OrderModule initialized, ensuring RabbitMQ connection is ready');
+  }
+} 

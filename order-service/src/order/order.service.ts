@@ -41,9 +41,11 @@ export class OrderService {
 
     // Create order foods and calculate total price
     const orderFoods = items.map(item => {
+      // Ensure types match when comparing IDs
       const foodMenu = foodMenuItems.find(fm => fm.id === item.foodMenuId);
       const orderFood = new OrderFood();
       orderFood.foodMenu = foodMenu;
+      orderFood.foodMenuId = foodMenu.id;
       orderFood.quantity = item.quantity;
       return orderFood;
     });
@@ -59,6 +61,7 @@ export class OrderService {
     // Set the order for each order food and save them
     orderFoods.forEach(orderFood => {
       orderFood.order = savedOrder;
+      orderFood.orderId = savedOrder.id;
     });
     await this.orderFoodRepository.save(orderFoods);
 

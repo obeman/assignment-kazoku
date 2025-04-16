@@ -3,9 +3,11 @@ const amqp = require('amqplib');
 async function setupRabbitMQ() {
   console.log('Setting up RabbitMQ exchange and queues...');
   
+  let connection;
+  
   try {
     // Connect to RabbitMQ
-    const connection = await amqp.connect('amqp://localhost:5672');
+    connection = await amqp.connect('amqp://localhost:5672');
     console.log('Connected to RabbitMQ');
     
     // Create a channel
@@ -31,6 +33,13 @@ async function setupRabbitMQ() {
       autoDelete: false
     });
     console.log(`Notification queue "${notificationQueue.queue}" created successfully`);
+    
+    // Create the order queue
+    const orderQueue = await channel.assertQueue('order_queue', {
+      durable: false,
+      autoDelete: false
+    });
+    console.log(`Order queue "${orderQueue.queue}" created successfully`);
 
     // Bind queues to the exchange
     await channel.bindQueue(kitchenQueue.queue, 'order_exchange', '');
@@ -38,15 +47,25 @@ async function setupRabbitMQ() {
 
     await channel.bindQueue(notificationQueue.queue, 'order_exchange', '');
     console.log(`Notification queue bound to exchange`);
+    
+    // No need to bind order_queue as the order service is only a publisher
 
     console.log('RabbitMQ setup completed successfully');
 
     // Close the channel and connection
     await channel.close();
-    await connection.close();
-    console.log('Connection closed');
+    console.log('Channel closed');
   } catch (error) {
     console.error('Error setting up RabbitMQ:', error);
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+        console.log('Connection closed');
+      } catch (err) {
+        console.error('Error closing connection:', err);
+      }
+    }
   }
 }
 

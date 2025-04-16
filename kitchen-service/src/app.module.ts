@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { KitchenModule } from './kitchen/kitchen.module';
+import { Order } from './entities/order.entity';
+import { FoodMenu } from './entities/food-menu.entity';
+import { OrderFood } from './entities/order-food.entity';
 
 @Module({
   imports: [
@@ -17,8 +20,9 @@ import { KitchenModule } from './kitchen/kitchen.module';
         username: configService.get('MYSQL_USER', 'root'),
         password: configService.get('MYSQL_PASSWORD', 'obeman123'),
         database: configService.get('MYSQL_DATABASE', 'restoran'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        entities: [Order, FoodMenu, OrderFood],
+        synchronize: false,
+        logging: true,
       }),
       inject: [ConfigService],
     }),
