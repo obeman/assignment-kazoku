@@ -174,10 +174,9 @@ EMAIL_PASSWORD=your_email_password
 ## API Endpoints
 
 ### Order Service
-- `POST /orders` - Create a new order
-- `GET /orders` - List all orders
-- `GET /orders/:id` - Get order details
-- `GET /orders/:id/status` - Get order status
+- `GET /orders/menu` - Get all food menu items
+- `POST /orders` - Create a new order 
+- `GET /orders/:orderId` - Get order details and status
 
 ## Troubleshooting
 
