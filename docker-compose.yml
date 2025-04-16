@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - app-network
+
+  order-service:
+    build: ./order-service
+    ports:
+      - "3001:3001"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - MYSQL_HOST=host.docker.internal
+      - MYSQL_PORT=3309
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=obeman123
+      - MYSQL_DATABASE=restoran
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+  kitchen-service:
+    build: ./kitchen-service
+    ports:
+      - "3002:3002"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - MYSQL_HOST=host.docker.internal
+      - MYSQL_PORT=3309
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=obeman123
+      - MYSQL_DATABASE=restoran
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "3003:3003"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - EMAIL_USER=naufalmuhammadroshandi@gmail.com
+      - EMAIL_PASSWORD=tuqujhrlclbfuvps
+    depends_on:
+      - rabbitmq
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data: 
