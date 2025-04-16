@@ -38,9 +38,8 @@ This is a microservices-based restaurant management system consisting of three s
 
 ## Prerequisites
 
-- Node.js (v16+)
-- RabbitMQ
-- MySQL
+- Docker and Docker Compose
+- MySQL (for local development only)
 
 ## Database Setup
 
@@ -58,7 +57,41 @@ node run-seed.js
 
 This will create the necessary tables (food_menu, orders, order_foods) and populate the food_menu table with sample data.
 
-## Setup
+## Using Docker Compose (Recommended)
+
+The easiest way to run the entire system is with Docker Compose:
+
+1. Build all services:
+```bash
+docker-compose build
+```
+
+2. Start all services:
+```bash
+docker-compose up
+```
+
+3. To run in background:
+```bash
+docker-compose up -d
+```
+
+This will start:
+- RabbitMQ server
+- RabbitMQ setup (automatically creates exchanges and queues)
+- Order Service
+- Kitchen Service
+- Notification Service
+
+The services will be available at:
+- Order Service: http://localhost:3001
+- Kitchen Service: http://localhost:3002
+- Notification Service: http://localhost:3003
+- RabbitMQ Management: http://localhost:15672 (guest/guest)
+
+## Manual Setup (Alternative)
+
+If you prefer to run services locally without Docker:
 
 1. Install dependencies for each service:
 ```bash
@@ -72,12 +105,7 @@ cd ../notification-service
 npm install
 ```
 
-2. Set up RabbitMQ exchange and queues:
-```bash
-node setup-rabbitmq.js
-```
-
-3. Start each service (in separate terminals):
+2. Start each service (in separate terminals):
 ```bash
 # Terminal 1
 cd order-service
@@ -108,7 +136,7 @@ The collection includes all necessary API endpoints for:
 
 ## Environment Configuration
 
-Each service requires its own `.env` file with the following settings:
+Each service requires its own `.env` file with the following settings (only needed for manual setup):
 
 ### Order Service
 ```
